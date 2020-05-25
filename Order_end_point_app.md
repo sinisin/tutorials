@@ -32,17 +32,17 @@ Once the order is saved, it will be picked up by the Azure Logic App. This Logic
 Cover flow from Order end point app to Consigmnment App
 (Question - will Logic app take care of publishing to topic for the Consignment App to pick up) 
 
-##Database
+## Database
 
 The order data will be persisted into NOSQL Azure Cosmos DB against the unique Order ID. 
 (Question - Should we maintain a new field "Status" as a metadata for Order to track if the Order is succesfully published. In case of failure, the Logic app can pick failed Orders to be created in OTM again) 
 
 
-##Other Components 
+## Other Components 
 --TODO
 Capture the Service bus component here.
 
-##Logical Boundary
+## Logical Boundary
 The application processing completes when the Order object is sent through POST operation in OTM and HTTP success code is received. 
 In case of failure, Logical app will try to POST the failed orders again in the next schedued run. 
 --TODO capture the flow of Order from Order End Point App to Consignment App
