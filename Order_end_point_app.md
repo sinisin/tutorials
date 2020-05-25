@@ -19,33 +19,38 @@ The Order XML received must have the following details as these are the key attr
 	
 ## Backend Processing
 
+The processing can be split into following steps : 
+
+* Save the uploaded XML/JSON into Azure storage area
+* Invoke OTM POST operation to send Order object
+* Post event in Service bus with Order ID and Order storage area file path
+* Listen to the event and fetch the Order data from specified file path in the event
+* Save the Order XML/JSON into Cosmos DB
+
 ### Azure Http Trigger Function
 
-Once the input XML is received through POST operation, the file will be persisted into storage area with a unique order ID. The function will return HTTP status code 200 if the order is successfully created. In case of failure, an error response will be returned with error code 
+Once the input XML/JSON is received through POST operation, the XML/JSON object will be saved into storage area. The function will return HTTP status code 200 if the order is successfully created. In case of failure, an error response will be returned with error code 
 * 4xx If the issue is with the input data for example : "Order ID duplication exception" or "Mandatory field not present"
 * 5xx For internal server or technical errors, 5xx error code will be returned. 
 
 ### Azure Logic App
 
-Once the order is saved, it will be picked up by the Azure Logic App. This Logic app will be backed by a scheduler which will run at scheduled repeat interval and pick up all newly saved orders. These orders will be sent to OTM cloud using POST operation. 
+Once the order is saved, it will be picked up by the Azure Logic App Function. This Logic app will be backed by a scheduler which will run at scheduled repeat interval and pick up all newly saved orders. These orders will be sent to OTM cloud by invoking OTM's POST operation. Once the successful response is received, the function will post an event in the service bus with the Order's storage area filepath and the orderID of the order as attributes.
 
--- TODO
-Cover flow from Order end point app to Consigmnment App
-(Question - will Logic app take care of publishing to topic for the Consignment App to pick up) 
+### Azure Persistence Function
+
+This function will be trigerred once the event is posted by the service bus in the above function. The app will read the XML/JSON file from file path received in the event and persist into Cosmos DB against unique Order ID. 
 
 ### Database
 
 The order data will be persisted into NOSQL Azure Cosmos DB against the unique Order ID. 
-(Question - Should we maintain a new field "Status" as a metadata for Order to track if the Order is succesfully published. In case of failure, the Logic app can pick failed Orders to be created in OTM again) 
 
+### Logging and Monitoring
 
-### Other Components 
--- TODO
-Capture the Service bus component here.
+Function App built in feature Application Insights can be used as it collects log, performance, and error data. It automatically detects performance anomalies. It can be configured be enabling this feature in the function app. 
 
 ## Logical Boundary
-The application processing completes when the Order object is sent through POST operation in OTM and HTTP success code is received.  
--- TODO Handle failure scenario, Capture the flow of Order from Order End Point App to Consignment App
+The application processing completes when the Order object is persisted into Cosmos DB. 
 
 
 
