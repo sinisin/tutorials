@@ -1,7 +1,7 @@
 # Order End Point App
 
 
-Order End Point App is the entry point application which will mimic the current function of GPS to generate orders. It will constitute multiple azure functions. The input of the app will be Order XML/JSON files uploaded through POST operation. It will be responsbile to send the Orders through POST operation to OTM and and share the Order data with the Consignment App. 
+Order End Point App is the entry point application which will mimic the current function of GPS to generate orders. It will constitute multiple azure functions. The input of the app will be Order XML/JSON files uploaded through POST operation. It will be responsbile to send these Orders through POST operation to OTM and and share the Order data with the Consignment App. 
 
 
 ## Order Attributes
