@@ -47,7 +47,7 @@ The order data will be persisted into NOSQL Azure Cosmos DB against the unique O
 
 ### Logging and Monitoring
 
-Function App built in feature Application Insights can be used as it collects log, performance, and error data. It automatically detects performance anomalies. It can be configured be enabling this feature in the function app. 
+The Function App comes with a built in feature "Application Insights" which can be used to collect log, performance, and error data. It automatically detects performance anomalies. It can be configured by enabling this feature in the function app. 
 
 ## Logical Boundary
 The application processing completes when the Order object is persisted into Cosmos DB. 
